@@ -11,12 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})->name('index')->middleware('checkauthen');
+Route::get('/',"MainController@Main")
+->name('index')
+->middleware('checkauthen');
 
-// Route::get('/login', function () {
-//     return view('login');
-// })->name('login');
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
 
-Route::get('/login', "LoginController@login");
+Route::post('/login', "LoginController@login")
+->name('loginpost');

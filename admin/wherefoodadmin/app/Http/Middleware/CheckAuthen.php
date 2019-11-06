@@ -15,7 +15,7 @@ class CheckAuthen
      */
     public function handle($request, Closure $next)
     {
-        if($request->bearerToken()=="admin")
+        if($request->session()->get('Auth')=='admin')
         {
             return $next($request);
         }

@@ -36,13 +36,13 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Where Food</h1>
                   </div>
-                  <form class="user" method="post" action="">
-                  {{ csrf_field() }}
+                  <form class="user" method="post" action="{{ route('loginpost') }}">
+                    {{ csrf_field() }}
                     <div class="form-group">
-                      <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                      <input type="text" class="form-control form-control-user" id="username" name="username"  placeholder="Enter UserName">
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Password">
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small">
