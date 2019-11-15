@@ -21,3 +21,17 @@ Route::get('/login', function () {
 
 Route::post('/login', "LoginController@login")
 ->name('loginpost');
+
+Route::get('/logout',function()
+{
+    if(session()->has('Auth'))
+    session()->forget('Auth');
+    return view('login');
+})
+->name('logout');
+
+Route::post('/listfood','FoodController@listFood')
+->name('listfood');
+
+
+

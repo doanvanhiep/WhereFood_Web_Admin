@@ -12,7 +12,7 @@ class LoginController extends Controller
         $HashPassWord=$request->password;
       
         $client = new Client();
-        $res = $client->request('POST', 'http://localhost/WhereFood-API-Server/api/wherefood/public/api/admin/loginadmin',
+        $res = $client->request('POST', 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/admin/loginadmin',
         ['form_params' => [
         'Account'=>$Account,
         'HashPassWord'=>$HashPassWord]]); 
