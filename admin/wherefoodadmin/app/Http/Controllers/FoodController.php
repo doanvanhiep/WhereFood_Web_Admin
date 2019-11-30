@@ -12,4 +12,11 @@ class FoodController extends Controller
         return response()->json($view,200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
         echo response()->json($view,200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
     }
+
+    public function listFoodWaitting(Request $request)
+    {
+        $view=view('listfoodwait')->with('listfoodwait', (array)($request->listfoodwait))->render();
+        return response()->json($view,200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
+        echo response()->json($view,200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
+    }
 }

@@ -33,5 +33,8 @@ Route::get('/logout',function()
 Route::post('/listfood','FoodController@listFood')
 ->name('listfood');
 
+Route::post('/listfoodwaitting','FoodController@listFoodWaitting')
+->name('listfoodwaitting');
+
 
 

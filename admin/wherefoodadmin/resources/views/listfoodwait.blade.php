@@ -6,7 +6,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h1 class="m-0 font-weight-bold text-primary">List Food</h1>
+    <h1 class="m-0 font-weight-bold text-primary">List Food Waitting</h1>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -25,8 +25,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($listfood as $food)
-                    <tr class="editFood" data-id="{{$food['FoodID']}}">
+                @foreach ($listfoodwait as $food)
+                    <tr class="editFood" data-id={{$food['FoodID']}}>
                         <!-- <td>{{$food['FoodID']}}</td> -->
                         <td>{{$food['FoodName']}}</td>
                         <td>{{$food['Prices']}}</td>
@@ -34,13 +34,10 @@
                         <td>{{$food['LongDescription']}}</td>
                         <td>{{$food['AvgSurvey']}}</td>
                         <td>{{$food['RestaurantName']}}</td>
-                        <td><button type="button" class="btn btn-info btnGetPicture" value="{{$food['PictureToken']}}" data-id="{{$food['FoodID']}}">Xem hình</button></td>
+                        <td><button type="button" class="btn btn-info btnGetPicturewait" value="{{$food['PictureToken']}}" data-id="{{$food['FoodID']}}">Xem hình</button></td>
                         <td>
-                        @if ($food['Status'] == 1)
-                        <button id="btn{{$food['FoodID']}}" type="button" class="btn btn-success btnActive btnChange"  data-id="{{$food['FoodID']}}">Active</button>
-                        @else
-                          <button id="btn{{$food['FoodID']}}" type="button" class="btn btn-warning btnDeActive btnChange" data-id="{{$food['FoodID']}}">Deactive</button>
-                        @endif
+                        <button type="button" class="btn btn-success btnActive"  data-id="{{$food['FoodID']}}">Accept</button>
+                        <button type="button" class="btn btn-warning btnDeActive" data-id="{{$food['FoodID']}}">Deny</button>
                         </td>
                     </tr>
                 @endforeach
@@ -55,99 +52,7 @@
 @include('foodDetail')
 <script>
 $(document).ready(function(){
-  $(".editFood").dblclick(function(){
-    var id=$(this).data('id');
-    var urlget="http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/getfoodbyidnostatus/"+id;
-    $.ajax({
-      type: 'GET',
-              url: urlget,
-              dataType: 'json',
-              success: function(data) {
-                $("#txt-foodID") .val(data.FoodID);
-                $("#txt-foodname") .val(data.FoodName);
-                $("#txt-price") .val(data.Prices);
-                $("#txt-shortdescription") .val(data.ShortDescription);
-                $("#txt-longdescription") .val(data.LongDescription);
-                $("#cb-restaurantname") .val(data.RestaurantID);
-                $('#edit-food').modal('show');
-                },
-                error: function(data) {
-                alert("error server");
-                }
-            });
-    });
-
-//Xem hình của food
-$(".btnGetPicture").click(function(){
-  var id=$(this).data('id');
-  var urlget='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/permalink/getpermalinkbyid/'+id;
-  $.ajax({
-    type: 'GET',
-            url: urlget,
-            dataType: 'json',
-            success: function(data) {
-              let html = "";
-			        for(let i = 0;i<data.length;i++){
-              html+="<div class=\"column\">";
-              html+="<img width=\"180px\" height=\"180px\" src=\"http://testserver.22domain.com/"+data[i].PicturePermalink+"\" onclick=\"myFunction(this);\">";
-				      // html+="<img padding='10' width='463px' src='http://testserver.22domain.com/"+data[i].PicturePermalink+"'>";
-              html+="</div>";
-              }
-              if(html == ""){
-                $(".row").html("<h4 class='text-center'>No Picture!</h4>");
-                alert("No Picture");
-                $('#viewpicture').modal('show');
-                return false;
-              } else {  
-                $(".row").html(html);
-                $('#viewpicture').modal('show');
-              }
-                    },error: function(data) {
-                    alert("error server");
-                    }
-                });
-    });
-    $('.btnChange').click(function(){
-    var id=$(this).data('id');
-    var urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusactive';
-    if($(this).hasClass('btnActive'))
-    {
-        urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusdeactive';
-    }
-    $.ajax({
-            type: 'POST',
-            url: urlChange,
-            data: {
-              FoodID: id,
-            },
-            dataType: 'json',
-            success: function(data) {
-            if(data==0)
-            {
-                alert("Fail Active");
-            }else
-            {
-              if($('#btn'+id).hasClass('btnActive'))
-                {
-                    $('#btn'+id).addClass('btn-warning btnDeactive');
-                    $('#btn'+id).text("Deactive");
-                    $('#btn'+id).removeClass("btn-success btnActive");
-                }
-                else{
-                    $('#btn'+id).addClass('btn-success btnActive');
-                    $('#btn'+id).text("Active");
-                    $('#btn'+id).removeClass("btn-warning btnDeactive");
-                }
-                alert("Success");
-                return;
-            }
-            },error: function(data) {
-            alert("Error");
-            }
-        });
-    });
-
-    $('#btnupdatefood').click(function(){
+  $('#btnupdatefood').click(function(){
       var id=$("#txt-foodID") .val();
       var foodname=$("#txt-foodname") .val();
       var price=$("#txt-price") .val();
@@ -179,6 +84,111 @@ $(".btnGetPicture").click(function(){
             }
         });
     });
+
+  //edit food
+  $(".editFood").dblclick(function(){
+    var id=$(this).data('id');
+    var urlget="http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/getfoodbyidnostatus/"+id;
+    $.ajax({
+      type: 'GET',
+              url: urlget,
+              dataType: 'json',
+              success: function(data) {
+                $("#txt-foodID") .val(data.FoodID);
+                $("#txt-foodname") .val(data.FoodName);
+                $("#txt-price") .val(data.Prices);
+                $("#txt-shortdescription") .val(data.ShortDescription);
+                $("#txt-longdescription") .val(data.LongDescription);
+                $("#cb-restaurantname") .val(data.RestaurantID);
+                $('#edit-food').modal('show');
+                },
+                error: function(data) {
+                alert("error server");
+                }
+            });
     });
+//Xem hình của food
+$(".btnGetPicturewait").click(function(){
+  var id=$(this).data('id');
+  var urlget='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/permalink/getpermalinkbyid/'+id;
+  $.ajax({
+    type: 'GET',
+            url: urlget,
+            dataType: 'json',
+            success: function(data) {
+              let html = "";
+			        for(let i = 0;i<data.length;i++){
+              html+="<div class=\"column\">";
+              html+="<img width=\"180px\" height=\"180px\" src=\"http://testserver.22domain.com/"+data[i].PicturePermalink+"\" onclick=\"myFunction(this);\">";
+				      // html+="<img padding='10' width='463px' src='http://testserver.22domain.com/"+data[i].PicturePermalink+"'>";
+              html+="</div>";
+              }
+              if(html == ""){
+                $(".row").html("<h4 class='text-center'>No Picture!</h4>");
+                alert("No Picture");
+                $('#viewpicture').modal('show');
+                return false;
+              } else {  
+                $(".row").html(html);
+                $('#viewpicture').modal('show');
+              }
+                    },error: function(data) {
+                    alert("error server");
+                    }
+              });
+    });
+
+    //accept
+    $('.btnActive').click(function(){
+    var id=$(this).data('id');
+    $.ajax({
+            type: 'POST',
+            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusactive',
+            data: {
+            FoodID: id,
+            },
+            dataType: 'json',
+            success: function(data) {
+            if(data==0)
+            {
+                alert("Thất bại");
+            }else
+            {
+              $('#'+id).remove();
+                alert("Thành công");
+            }
+            },error: function(data) {
+            alert("Lỗi rồi");
+            }
+        });
+    });
+
+    //deny
+    $('.btnDeActive').click(function(){
+    var id=$(this).data('id');
+    $.ajax({
+            type: 'POST',
+            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusdeactive',
+            data: {
+            FoodID: id,
+            },
+            dataType: 'json',
+            success: function(data) {
+            if(data==0)
+            {
+                alert("Thất bại");
+            }else
+            {
+                $('#'+id).remove();
+                alert("Thành công");
+            }
+            },error: function(data) {
+            alert("Lỗi rồi");
+            }
+        });
+    });
+
+
+  });
 </script>  
 
