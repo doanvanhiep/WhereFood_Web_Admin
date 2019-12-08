@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{csrf_token()}}">
 
   <title>WhereFood</title>
   <!-- add thêm vào -->
@@ -202,7 +202,24 @@
       </div>
     </div>
   </div>
-
+<!-- messagebox Modal-->
+  <div class="modal fade" id="messagebox" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titlemessage">Change state</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div id="content-message" class="modal-body">Content message</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button id="btnOK" class="btn btn-primary" style="color:white">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Bootstrap core JavaScript-->
   <script src="resourceweb/vendor/jquery/jquery.min.js"></script>
   <script src="resourceweb/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

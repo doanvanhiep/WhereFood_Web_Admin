@@ -8,7 +8,7 @@
 			<div class="modal-body">
 				<h1>Register User</h1>
 				<div id="userdetail">
-					<form id="user-info">
+					<form id="user-info-register">
                         <div  class="form-group">
 							<label for="txt-useraccountadd">User Account: </label>
 							<input type="text" class="form-control" id="txt-useraccountadd" name="txt-useraccountadd">

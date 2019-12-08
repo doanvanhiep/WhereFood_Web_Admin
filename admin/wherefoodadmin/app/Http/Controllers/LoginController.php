@@ -11,7 +11,7 @@ class LoginController extends Controller
         $Account=$request->username;
         $HashPassWord=$request->password;
       
-        $client = new Client();
+        $client = new Client(['verify' => false]);
         $res = $client->request('POST', 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/admin/loginadmin',
         ['form_params' => [
         'Account'=>$Account,

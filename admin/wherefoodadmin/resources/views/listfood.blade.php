@@ -28,13 +28,13 @@
                 @foreach ($listfood as $food)
                     <tr class="editFood" data-id="{{$food['FoodID']}}">
                         <!-- <td>{{$food['FoodID']}}</td> -->
-                        <td>{{$food['FoodName']}}</td>
-                        <td>{{$food['Prices']}}</td>
-                        <td>{{$food['ShortDescription']}}</td>
-                        <td>{{$food['LongDescription']}}</td>
-                        <td>{{$food['AvgSurvey']}}</td>
-                        <td>{{$food['RestaurantName']}}</td>
-                        <td><button type="button" class="btn btn-info btnGetPicture" value="{{$food['PictureToken']}}" data-id="{{$food['FoodID']}}">Xem hình</button></td>
+                        <td id={{$food['FoodID'] ."foodname"}}>{{$food['FoodName']}}</td>
+                        <td id={{$food['FoodID'] ."prices"}}>{{$food['Prices']}}</td>
+                        <td id={{$food['FoodID'] ."short"}}>{{$food['ShortDescription']}}</td>
+                        <td id={{$food['FoodID'] ."long"}}>{{$food['LongDescription']}}</td>
+                        <td id={{$food['FoodID'] ."avg"}}>{{$food['AvgSurvey']}}</td>
+                        <td id={{$food['FoodID'] ."resname"}}>{{$food['RestaurantName']}}</td>
+                        <td ><button type="button" class="btn btn-info btnGetPicture" value="{{$food['PictureToken']}}" data-id="{{$food['FoodID']}}">Xem hình</button></td>
                         <td>
                         @if ($food['Status'] == 1)
                         <button id="btn{{$food['FoodID']}}" type="button" class="btn btn-success btnActive btnChange"  data-id="{{$food['FoodID']}}">Active</button>
@@ -107,14 +107,28 @@ $(".btnGetPicture").click(function(){
                     }
                 });
     });
+
+    state=4;
     $('.btnChange').click(function(){
-    var id=$(this).data('id');
-    var urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusactive';
+    id=$(this).data('id');
+    var contentTitle="Do you want active food ?";
+    urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusactive';
     if($(this).hasClass('btnActive'))
     {
         urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatestatusdeactive';
+        contentTitle="Do you want deactive food ?";
     }
-    $.ajax({
+    state=4;
+    $('#titlemessage').text("Change active");
+    $('#content-message').text(contentTitle);
+    $('#messagebox').modal('show');
+    });
+
+
+    //function change
+    function changeActiveFood()
+    {
+      $.ajax({
             type: 'POST',
             url: urlChange,
             data: {
@@ -145,15 +159,10 @@ $(".btnGetPicture").click(function(){
             alert("Error");
             }
         });
-    });
-
-    $('#btnupdatefood').click(function(){
-      var id=$("#txt-foodID") .val();
-      var foodname=$("#txt-foodname") .val();
-      var price=$("#txt-price") .val();
-      var shortdescription=$("#txt-shortdescription") .val();
-      var longdescription=$("#txt-longdescription") .val();
-    $.ajax({
+    }
+    function updateFood()
+    {
+      $.ajax({
             type: 'POST',
             url: "http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/food/updatefood",
             data: {
@@ -167,17 +176,53 @@ $(".btnGetPicture").click(function(){
             success: function(data) {
             if(data==0)
             {
-                alert("Fail Active");
+                alert("Nothing");
+                $('#edit-food').modal('hide');
             }else
             {
                 alert("Success");
-                $('#edit-food').modal('hidden');
+                $('#edit-food').modal('hide');
+                //reload data
+                $("#"+id+"foodname").text($("#txt-foodname") .val());
+                $("#"+id+"prices").text($("#txt-price") .val());
+                $("#"+id+"short").text($("#txt-shortdescription") .val());
+                $("#"+id+"long").text($("#txt-longdescription") .val());
                 return;
             }
             },error: function(data) {
             alert("Error");
             }
-        });
+        }); 
+    }
+    function btnOKFood(state)
+    {
+      if(state<4)
+      return;
+      if(state==4)
+      {
+        changeActiveFood();
+      }
+      if(state==5)
+      {
+        updateFood();
+      }
+      state=0;
+    }
+    $('#btnOK').click(function(){
+        $('#messagebox').modal('hide');
+        btnOKFood(state);
+    });
+
+    $('#btnupdatefood').click(function(){
+      id=$("#txt-foodID") .val();
+      foodname=$("#txt-foodname") .val();
+      price=$("#txt-price") .val();
+      shortdescription=$("#txt-shortdescription") .val();
+      longdescription=$("#txt-longdescription") .val();
+      state=5;
+      $('#titlemessage').text("Update food");
+      $('#content-message').text("Do you want update food?");
+      $('#messagebox').modal('show');
     });
     });
 </script>  

@@ -51,6 +51,190 @@
 @include('userRegister')
 <script>
 $(document).ready(function(){
+  var useraccount="";
+  var password="";
+  var fullname="";
+  var dateofbirth="";
+  var phonenumber="";
+  var urlChange="";
+  var user="";
+  var state=0;//1: change active, 2: update, 3: add
+
+  //for food
+  var id;
+  var foodname;
+  var price;
+  var shortdescription;
+  var longdescription;
+  //end for food
+  function changeActive()
+  {
+    $.ajax({
+        type: 'POST',
+        url: urlChange,
+        data: {
+        UserAccount: user,
+        },
+        dataType: 'json',
+        success: function(data) {
+        if(data==0)
+        {
+            alert("Fail Active");
+        }else
+        {
+            if($('#'+user).hasClass('btnActive'))
+            {
+                $('#'+user).addClass('btn-warning btnDeactive');
+                $('#'+user).text("Deactive");
+                $('#'+user).removeClass("btn-success btnActive");
+            }
+            else{
+                $('#'+user).addClass('btn-success btnActive');
+                $('#'+user).text("Active");
+                $('#'+user).removeClass("btn-warning btnDeactive");
+            }
+            alert("Success");
+            return;
+        }
+        },error: function(data) {
+        alert("Error");
+        }
+    });
+  }
+  function updateUser()
+  {
+    $.ajax({
+    type: 'POST',
+            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/updateuserbyuseraccount',
+            data: {
+            UserAccount:    $("#txt-useraccount") .val(),
+            FullName:       $("#txt-fullname") .val(),
+            DateOfBirth:    new Date($("#txt-dateofbirth") .val().toString()).getTime(),
+            PhoneNumber:    $("#txt-phonenumber") .val(),
+            },
+            dataType: 'json',
+            success: function(data) {
+              if(data==-4)
+              {
+                alert("Phone number existed!");
+              }
+              else{
+                if(data==0)
+                {
+                  alert("Nothing!");
+                }
+                else
+                {
+                  alert("Success!");
+                  var useraccount=$("#txt-useraccount") .val();
+                  //reload data
+                  $("#"+useraccount+"registertime").text($("#txt-registertime") .val());
+                  $("#"+useraccount+"fullname").text($("#txt-fullname") .val());
+                  var date=$("#txt-dateofbirth") .val().split("-");
+                  $("#"+useraccount+"dateofbirth").text(date[2]+"/"+date[1]+"/"+date[0]);
+                  $("#"+useraccount+"phonenumber").text($("#txt-phonenumber") .val());
+                }
+                $('#edit-modal').modal('hide');
+              }
+              
+            },
+            error: function(data) {
+              alert("Error server");
+              $('#edit-modal').modal('hide');
+            }
+        });
+  }
+  
+  function addUser()
+  {
+    $.ajax({
+    type: 'POST',
+            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/registeraccount',
+            data: {
+            UserAccount:useraccount,
+            HashPassWord:password,
+            RegisteredTime:new Date().getTime(),
+            FullName:fullname,
+            DateOfBirth:new Date(dateofbirth).getTime(),
+            PhoneNumber: phonenumber,
+            },
+            dataType: 'json',
+            success: function(data) {
+              if(data==-1)
+              {
+                alert('Add fail');
+                return;
+              }
+              if(data==-5)
+              {
+                alert("User account existed!");
+                return;
+              }
+              else
+              {
+                if(data==-4)
+              {
+                alert("Phone number existed!");
+                return;
+              }
+              else{
+                if(data==0)
+                {
+                  alert("Nothing!");
+                }
+                else
+                {
+                  alert("Success!");
+                  
+                }
+                $('#register-user').modal('hide');
+              }
+              }
+            },
+            error: function(data) {
+              alert("Error server");
+              $('#register-user').modal('hide');
+            }
+        });
+  }
+  function btnOK(state)
+  {
+    if(state==1)
+    {
+      changeActive();
+    }
+    if(state==2)
+    {
+      updateUser()
+    }
+    if(state==3)
+    {
+      addUser();
+    }
+    state=0;
+  }
+    $('#btnOK').click(function(){
+        if(state==0)
+        return;
+        $('#messagebox').modal('hide');
+        btnOK(state);
+    });
+    //change
+    $('.btnChange').click(function(){
+    user=$(this).data('id');
+    var contentTitle="Do you want active "+user+" ?";
+    urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/updatestatustrue';
+    if($('#'+user).hasClass('btnActive'))
+    {
+        urlChange='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/updatestatusfalse';
+        contentTitle="Do you want deactive "+user+" ?";
+    }
+    state=1;
+    $('#titlemessage').text("Change active");
+    $('#content-message').text(contentTitle);
+    $('#messagebox').modal('show');
+
+    });
   $(".edit").dblclick(function(){
   var id=$(this).data('id');
   var urlget='http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/getuserbyuseraccount/'+id;
@@ -100,48 +284,12 @@ $(document).ready(function(){
       alert("Insert phone number");
       return;
     }
-    $.ajax({
-    type: 'POST',
-            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/updateuserbyuseraccount',
-            data: {
-            UserAccount:    $("#txt-useraccount") .val(),
-            FullName:       $("#txt-fullname") .val(),
-            DateOfBirth:    new Date($("#txt-dateofbirth") .val().toString()).getTime(),
-            PhoneNumber:    $("#txt-phonenumber") .val(),
-            },
-            dataType: 'json',
-            success: function(data) {
-              if(data==-4)
-              {
-                alert("Phone number existed!");
-              }
-              else{
-                if(data==0)
-                {
-                  alert("Nothing!");
-                }
-                else
-                {
-                  alert("Success!");
-                  var useraccount=$("#txt-useraccount") .val();
-                  //reload data
-                  $("#"+useraccount+"registertime").text($("#txt-registertime") .val());
-                  $("#"+useraccount+"fullname").text($("#txt-fullname") .val());
-                  var date=$("#txt-dateofbirth") .val().split("-");
-                  $("#"+useraccount+"dateofbirth").text(date[2]+"/"+date[1]+"/"+date[0]);
-                  $("#"+useraccount+"phonenumber").text($("#txt-phonenumber") .val());
-                }
-                $('#edit-modal').modal('hide');
-              }
-              
-            },
-            error: function(data) {
-              alert("Error server");
-              $('#edit-modal').modal('hide');
-            }
-        });
+    state=2;
+    $('#titlemessage').text("Update");
+    $('#content-message').text("Do you want update?");
+    $('#messagebox').modal('show');
   });
-
+  
 
 
   $("#addUser").click(function(){
@@ -155,25 +303,25 @@ $(document).ready(function(){
   });
 
   $("#btnAdd").click(function(){
-    var useraccount=$("#txt-useraccountadd").val();
+    useraccount=$("#txt-useraccountadd").val();
     if(useraccount=="")
     {
       alert("User account not empty!");
       return;
     }
-    var fullname= $("#txt-fullnameadd") .val();
+    fullname= $("#txt-fullnameadd") .val();
     if(fullname=="")
     {
       alert("Full name not empty!");
       return;
     }
-    var dateofbirth= $("#txt-dateofbirthadd") .val();
+    dateofbirth= $("#txt-dateofbirthadd") .val();
     if(dateofbirth=="")
     {
       alert("Date of birth not empty!");
       return;
     }
-    var phonenumber= $("#txt-phonenumberadd") .val();
+    phonenumber= $("#txt-phonenumberadd") .val();
     if(phonenumber=="")
     {
       alert("Phone number not empty and is number !");
@@ -192,6 +340,11 @@ $(document).ready(function(){
       alert("Password not empty!");
       return;
     }
+    if(password.length<8)
+    {
+      alert("Password least 8 character");
+      return;
+    }
     var confirmpassword= $("#txt-confirmpasswordadd") .val();
     if(confirmpassword=="")
     {
@@ -203,54 +356,10 @@ $(document).ready(function(){
       alert("Password not math confirmpassword!");
       return;
     }
-    $.ajax({
-    type: 'POST',
-            url: 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/registeraccount',
-            data: {
-            UserAccount:useraccount,
-            HashPassWord:password,
-            RegisteredTime:      new Date().getTime(),
-            FullName:fullname,
-            DateOfBirth:new Date(dateofbirth).getTime(),
-            PhoneNumber:    phonenumber,
-            },
-            dataType: 'json',
-            success: function(data) {
-              if(data==-1)
-              {
-                alert('Add fail');
-                return;
-              }
-              if(data==-5)
-              {
-                alert("User account existed!");
-                return;
-              }
-              else
-              {
-                if(data==-4)
-              {
-                alert("Phone number existed!");
-                return;
-              }
-              else{
-                if(data==0)
-                {
-                  alert("Nothing!");
-                }
-                else
-                {
-                  alert("Success!");
-                }
-                $('#register-user').modal('hide');
-              }
-              }
-            },
-            error: function(data) {
-              alert("Error server");
-              $('#register-user').modal('hide');
-            }
-        });
+    state=3;
+    $('#titlemessage').text("ADD");
+    $('#content-message').text("Do you want add user?");
+    $('#messagebox').modal('show');
   });
 });
 </script>        

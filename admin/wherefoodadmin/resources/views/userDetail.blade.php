@@ -25,8 +25,8 @@
 							<input type="text" class="form-control" id="txt-phonenumber" name="txt-phonenumber">
 						</div>
 						<div class="modal-footer">
-						<input type="button" id="btnupdate" name="submit" value="Save" class="form-control btn btn-default">
-						<input type="button" value="Cancel" class="form-control btn btn-default" data-dismiss="modal">
+						<input type="button" value="Cancel" class="btn btn-secondary" data-dismiss="modal">
+						<input type="button" id="btnupdate" name="submit" value="Save" class="btn btn-primary">
 						</div>
 					</form>
 				</div>

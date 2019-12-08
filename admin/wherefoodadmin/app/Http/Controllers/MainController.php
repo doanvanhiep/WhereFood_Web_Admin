@@ -9,8 +9,8 @@ class MainController extends Controller
     public function Main()
     {
         //list user
-        $client = new Client();
-        $res = $client->request('GET', 'http://testserver.22domain.com/public/api/user/getalluser'); 
+        $client = new Client(['verify' => false]);
+        $res = $client->request('GET', 'http://localhost:81/WhereFood-API-Server/api/wherefood/public/api/user/getalluser'); 
         $listuser=json_decode($res->getBody());
         return view('listuser',['listuser'=>(array)$listuser]); 
     }
