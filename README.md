@@ -1,6 +1,8 @@
 # WhereFood
+### Powerpoint
+Powerpoint reference: https://drive.google.com/file/d/1fAdcte052kfhwTkoHziiftgU0Oougub-/view?usp=sharing
+### Report
 Report reference: https://drive.google.com/file/d/12V3cMAtmQKiE7qSktXowONkYrbx_6yE7/view?usp=sharing 
-Report reference: https://drive.google.com/open?id=1eLI0AXR2CjwbiCFiv2DB-Wmhx7DGsJfp 
 ## WhereFood has 3 seperate compopents:
 1. WhereFood Mobile Application: 
 Git reference: https://github.com/hongkha336/WhereFood-Mobile-Client.git
@@ -18,7 +20,3 @@ public static String GLOBAL_URL = YOUR_SERVER_URL;
 from directory: WhereFood-Mobile-Client/app/src/main/java/com/wtf/wherefood/Share/AppConfig.java
 </br>
 Step 4:(Optional) [Change WhereFood Web Management](https://github.com/doanvanhiep/WhereFood_Web_Admin.git), change the APP_URL to YOUR_SERVER_URL
-
-
-
-
